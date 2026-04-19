@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NutriTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --card: #1a1a1a;
+  --card2: #202020;
+  --border: #2c2c2c;
+  --accent: #c8f542;
+  --accent2: #42d4f5;
+  --accent3: #f5a742;
+  --accent4: #f542a8;
+  --text: #f0f0f0;
+  --muted: #606060;
+  --danger: #f54242;
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+.header {
+  padding: 54px 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+.logo span { color: var(--accent); }
+.date-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* SUMMARY STRIP */
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 16px 20px 0;
+}
+.strip-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.strip-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.strip-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* PROGRESS BARS */
+.progress-section { padding: 12px 20px 0; }
+.prog-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.prog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.prog-label { font-size: 13px; font-weight: 500; }
+.prog-nums { font-size: 12px; color: var(--muted); }
+.prog-nums b { color: var(--text); font-weight: 600; }
+.track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  min-width: 0;
+}
+.fill.cal { background: linear-gradient(90deg, var(--accent), #a8d400); }
+.fill.prot { background: linear-gradient(90deg, var(--accent2), #00a8cc); }
+.prog-goal-btn {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.tiny-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  padding: 2px 0;
+}
+.tiny-btn:active { color: var(--accent); }
+
+/* SECTION HEADER */
+.sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 10px;
+}
+.sec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.add-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  color: #0a0a0a;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 300;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.add-btn:active { transform: scale(0.88); }
+
+/* SEARCH */
+.search-wrap { padding: 0 20px 10px; }
+.search-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px 10px 36px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23606060' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+}
+.search-input:focus { border-color: var(--accent); }
+
+/* CATEGORY FILTER */
+.cat-scroll {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-chip {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.cat-chip.active { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 600; }
+
+/* QUICK GRID */
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 20px;
+}
+.quick-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.quick-card:active { transform: scale(0.96); background: var(--card2); }
+.quick-card.hidden { display: none; }
+.q-icon {
+  font-size: 26px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.q-info { flex: 1; min-width: 0; }
+.q-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.q-macros { display: flex; gap: 6px; }
+.q-cal { font-size: 11px; color: var(--accent); font-weight: 500; }
+.q-prot { font-size: 11px; color: var(--accent2); font-weight: 500; }
+.q-add {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0a0a0a;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* FOOD LOG */
+.food-log { padding: 0 20px; }
+.meal-group { margin-bottom: 16px; }
+.meal-group-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.meal-group-total { font-size: 11px; color: var(--muted); }
+.food-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeUp 0.2s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.f-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+  flex-shrink: 0;
+}
+.f-info { flex: 1; min-width: 0; }
+.f-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.f-macros { display: flex; gap: 10px; }
+.f-cal { font-size: 12px; color: var(--accent); }
+.f-prot { font-size: 12px; color: var(--accent2); }
+.f-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.f-time { font-size: 11px; color: var(--muted); }
+.del-btn {
+  width: 26px; height: 26px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.del-btn:active { background: #2a1111; border-color: var(--danger); color: var(--danger); }
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.empty-emoji { font-size: 44px; display: block; margin-bottom: 10px; opacity: 0.4; }
+
+/* MODAL */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 100;
+  display: none;
+  align-items: flex-end;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.overlay.show { display: flex; }
+.sheet {
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  padding: 8px 20px 44px;
+  width: 100%;
+  border-top: 1px solid var(--border);
+  animation: slideUp 0.28s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  margin: 10px auto 20px;
+}
+.sheet-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+.sheet-title span { color: var(--accent); }
+.field { margin-bottom: 14px; }
+.field-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 6px;
+}
+.field-inp {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.field-inp:focus { border-color: var(--accent); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.meal-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.m-chip {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.m-chip.sel { background: rgba(200,245,66,0.12); border-color: var(--accent); color: var(--accent); }
+.sheet-actions { display: flex; gap: 10px; margin-top: 20px; }
+.btn-cancel {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+}
+.btn-ok {
+  flex: 2;
+  background: var(--accent);
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  color: #0a0a0a;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-cancel:active, .btn-ok:active { opacity: 0.7; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: rgba(10,10,10,0.96);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px 30px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex; gap: 4px;
+  z-index: 50;
+}
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  transition: all 0.2s;
+}
+.nav-btn.active { color: var(--accent); background: rgba(200,245,66,0.07); }
+.nav-ico { font-size: 21px; }
+
+/* STATS TAB */
+.stats-tab { display: none; padding: 16px 20px 0; }
+.stats-tab.show { display: block; }
+.main-tab { display: block; }
+.main-tab.hide { display: none; }
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 10px;
+}
+.stat-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.meal-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.meal-stat-row:last-child { border-bottom: none; }
+.meal-stat-badges { display: flex; gap: 10px; }
+.badge-cal { font-size: 12px; color: var(--accent); font-weight: 500; }
+.badge-prot { font-size: 12px; color: var(--accent2); font-weight: 500; }
+
+/* RESET */
+.reset-row { padding: 10px 20px 0; display: flex; justify-content: flex-end; }
+.reset-btn {
+  font-size: 12px; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 20px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.reset-btn:active { color: var(--danger); border-color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div class="logo">Nutri<span>Track</span></div>
+    <div class="date-pill" id="datePill"></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <div class="prog-card">
+    <div class="prog-header">
+      <div class="prog-label">⚡ Calorías</div>
+      <div class="prog-nums"><b id="calCur">0</b> / <span id="calGoalN">2000</span> kcal</div>
+    </div>
+    <div class="track"><div class="fill cal" id="calFill" style="width:0%"></div></div>
+    <div class="prog-goal-btn"><button class="tiny-btn" onclick="openGoal()">Editar meta →</button></div>
+  </div>
+  <div class="prog-card">
+    <div class="prog-header">
+      <div class="prog-label">💪 Proteína</div>
+      <div class="prog-nums"><b id="protCur">0</b>g / <span id="protGoalN">150</span>g</div>
+    </div>
+    <div class="track"><div class="fill prot" id="protFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- SUMMARY STRIP -->
+<div class="summary-strip">
+  <div class="strip-card">
+    <div class="strip-val" id="sCalRem" style="color:var(--accent)">2000</div>
+    <div class="strip-lbl">Restantes</div>
+  </div>
+  <div class="strip-card">
+    <div class="strip-val" id="sItems" style="color:var(--text)">0</div>
+    <div class="strip-lbl">Alimentos</div>
+  </div>
+  <div class="strip-card">
+    <div class="strip-val" id="sAvgCal" style="color:var(--accent3)">—</div>
+    <div class="strip-lbl">Media/alim</div>
+  </div>
+  <div class="strip-card">
+    <div class="strip-val" id="sProt" style="color:var(--accent2)">0g</div>
+    <div class="strip-lbl">Proteína</div>
+  </div>
+</div>
+
+<!-- RESET -->
+<div class="reset-row">
+  <button class="reset-btn" onclick="resetDay()">↺ Reiniciar día</button>
+</div>
+
+<!-- MAIN TAB -->
+<div class="main-tab" id="mainTab">
+
+  <!-- QUICK ADD -->
+  <div class="sec-header">
+    <div class="sec-title">Accesos rápidos</div>
+    <button class="add-btn" onclick="openAdd()">+</button>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-input" id="searchInp" placeholder="Buscar alimento..." oninput="filterQuick()" autocomplete="off"/>
+  </div>
+
+  <div class="cat-scroll" id="catScroll"></div>
+  <div class="quick-grid" id="quickGrid"></div>
+
+  <!-- LOG -->
+  <div class="sec-header" style="padding-top:20px;">
+    <div class="sec-title">Registro de hoy</div>
+  </div>
+  <div class="food-log" id="foodLog"></div>
+</div>
+
+<!-- STATS TAB -->
+<div class="stats-tab" id="statsTab">
+  <div class="stat-card">
+    <div class="stat-card-title">Resumen del día</div>
+    <div class="meal-stat-row">
+      <span>Total calorías</span>
+      <span class="badge-cal" id="st-cal">0 kcal</span>
+    </div>
+    <div class="meal-stat-row">
+      <span>Proteína total</span>
+      <span class="badge-prot" id="st-prot">0g</span>
+    </div>
+    <div class="meal-stat-row">
+      <span>Alimentos registrados</span>
+      <span id="st-items" style="font-size:12px;color:var(--muted)">0</span>
+    </div>
+    <div class="meal-stat-row">
+      <span>Calorías restantes</span>
+      <span id="st-rem" style="font-size:12px;color:var(--muted)">0</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-title">Por comida</div>
+    <div id="st-meals"></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-title">Progreso de metas</div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+        <span>Calorías</span><span id="st-calpct" style="color:var(--accent)">0%</span>
+      </div>
+      <div class="track"><div class="fill cal" id="st-calbar" style="width:0%"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+        <span>Proteína</span><span id="st-protpct" style="color:var(--accent2)">0%</span>
+      </div>
+      <div class="track"><div class="fill prot" id="st-protbar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="navHome" onclick="switchTab('home')">
+    <span class="nav-ico">🥗</span>Inicio
+  </button>
+  <button class="nav-btn" id="navStats" onclick="switchTab('stats')">
+    <span class="nav-ico">📊</span>Stats
+  </button>
+</div>
+
+<!-- ADD MODAL -->
+<div class="overlay" id="addOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Añadir <span>alimento</span></div>
+    <div class="field">
+      <div class="field-lbl">Nombre</div>
+      <input class="field-inp" id="inpName" placeholder="Ej: Pechuga de pollo" autocomplete="off"/>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <div class="field-lbl">Calorías (kcal)</div>
+        <input class="field-inp" id="inpCal" placeholder="0" type="number" inputmode="numeric"/>
+      </div>
+      <div class="field">
+        <div class="field-lbl">Proteína (g)</div>
+        <input class="field-inp" id="inpProt" placeholder="0" type="number" inputmode="decimal"/>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-lbl">Comida</div>
+      <div class="meal-chips">
+        <div class="m-chip sel" data-m="Desayuno" onclick="selMeal(this)">🌅 Desayuno</div>
+        <div class="m-chip" data-m="Almuerzo" onclick="selMeal(this)">☀️ Almuerzo</div>
+        <div class="m-chip" data-m="Cena" onclick="selMeal(this)">🌙 Cena</div>
+        <div class="m-chip" data-m="Snack" onclick="selMeal(this)">🍎 Snack</div>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeOverlay('addOverlay')">Cancelar</button>
+      <button class="btn-ok" onclick="addFood()">Añadir ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- GOAL MODAL -->
+<div class="overlay" id="goalOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Mis <span>metas</span></div>
+    <div class="field">
+      <div class="field-lbl">Meta de calorías (kcal/día)</div>
+      <input class="field-inp" id="inpGoalCal" type="number" inputmode="numeric"/>
+    </div>
+    <div class="field">
+      <div class="field-lbl">Meta de proteína (g/día)</div>
+      <input class="field-inp" id="inpGoalProt" type="number" inputmode="numeric"/>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeOverlay('goalOverlay')">Cancelar</button>
+      <button class="btn-ok" onclick="saveGoal()">Guardar ✓</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const FOODS = [
+  // Proteínas
+  { name:'Pechuga pollo', cal:165, prot:31, icon:'🍗', cat:'Proteína' },
+  { name:'Pechuga pavo', cal:135, prot:29, icon:'🦃', cat:'Proteína' },
+  { name:'Salmón', cal:208, prot:20, icon:'🐠', cat:'Proteína' },
+  { name:'Atún lata', cal:120, prot:25, icon:'🐟', cat:'Proteína' },
+  { name:'Huevo entero', cal:78, prot:6, icon:'🥚', cat:'Proteína' },
+  { name:'Clara de huevo', cal:17, prot:3.6, icon:'🍳', cat:'Proteína' },
+  { name:'Whey proteína', cal:120, prot:24, icon:'💪', cat:'Proteína' },
+  { name:'Sardinas lata', cal:150, prot:21, icon:'🐡', cat:'Proteína' },
+  { name:'Ternera magra', cal:180, prot:26, icon:'🥩', cat:'Proteína' },
+  { name:'Gambas', cal:85, prot:18, icon:'🦐', cat:'Proteína' },
+  { name:'Queso cottage', cal:98, prot:11, icon:'🧀', cat:'Proteína' },
+  { name:'Tofu', cal:76, prot:8, icon:'🫘', cat:'Proteína' },
+  // Lácteos
+  { name:'Yogur griego', cal:100, prot:17, icon:'🥛', cat:'Lácteos' },
+  { name:'Leche entera', cal:150, prot:8, icon:'🍼', cat:'Lácteos' },
+  { name:'Leche desnatada', cal:90, prot:9, icon:'🥤', cat:'Lácteos' },
+  { name:'Requesón', cal:80, prot:12, icon:'🧈', cat:'Lácteos' },
+  // Carbohidratos
+  { name:'Arroz cocido', cal:130, prot:3, icon:'🍚', cat:'Carbos' },
+  { name:'Avena', cal:150, prot:5, icon:'🥣', cat:'Carbos' },
+  { name:'Pan integral', cal:80, prot:4, icon:'🍞', cat:'Carbos' },
+  { name:'Pasta cocida', cal:160, prot:6, icon:'🍝', cat:'Carbos' },
+  { name:'Batata', cal:90, prot:2, icon:'🍠', cat:'Carbos' },
+  { name:'Patata cocida', cal:77, prot:2, icon:'🥔', cat:'Carbos' },
+  { name:'Quinoa cocida', cal:120, prot:4.4, icon:'🌾', cat:'Carbos' },
+  { name:'Plátano', cal:89, prot:1, icon:'🍌', cat:'Carbos' },
+  { name:'Manzana', cal:52, prot:0.3, icon:'🍎', cat:'Carbos' },
+  { name:'Naranja', cal:47, prot:0.9, icon:'🍊', cat:'Carbos' },
+  // Verduras
+  { name:'Brócoli', cal:55, prot:4, icon:'🥦', cat:'Verduras' },
+  { name:'Espinacas', cal:23, prot:2.9, icon:'🥬', cat:'Verduras' },
+  { name:'Ensalada mixta', cal:20, prot:1.5, icon:'🥗', cat:'Verduras' },
+  { name:'Tomate', cal:18, prot:0.9, icon:'🍅', cat:'Verduras' },
+  { name:'Aguacate', cal:160, prot:2, icon:'🥑', cat:'Verduras' },
+  { name:'Zanahoria', cal:41, prot:0.9, icon:'🥕', cat:'Verduras' },
+  // Grasas y snacks
+  { name:'Almendras', cal:170, prot:6, icon:'🌰', cat:'Snacks' },
+  { name:'Nueces', cal:185, prot:4.3, icon:'🥜', cat:'Snacks' },
+  { name:'Mantequilla cacahuete', cal:190, prot:8, icon:'🫙', cat:'Snacks' },
+  { name:'Aceite de oliva', cal:120, prot:0, icon:'🫒', cat:'Snacks' },
+  { name:'Chocolate negro', cal:170, prot:2, icon:'🍫', cat:'Snacks' },
+  { name:'Barrita proteína', cal:200, prot:20, icon:'🍫', cat:'Snacks' },
+];
+
+const CATS = ['Todos', 'Proteína', 'Lácteos', 'Carbos', 'Verduras', 'Snacks'];
+const MEAL_EMOJIS = { Desayuno:'🌅', Almuerzo:'☀️', Cena:'🌙', Snack:'🍎' };
+const ICONS = ['🥩','🍖','🥘','🥙','🫕','🧆','🥞','🫙','🍱','🥪','🌮','🫔'];
+
+// ── STATE ─────────────────────────────────────────────
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('nt2_state') || '{}');
+    const today = new Date().toDateString();
+    if (s.date !== today) return { date: today, foods: [], goalCal: 2000, goalProt: 150 };
+    return s;
+  } catch { return { date: new Date().toDateString(), foods: [], goalCal: 2000, goalProt: 150 }; }
+}
+function save() { localStorage.setItem('nt2_state', JSON.stringify(state)); }
+
+let state = loadState();
+let activeCat = 'Todos';
+let selectedMeal = 'Desayuno';
+
+// ── INIT ──────────────────────────────────────────────
+function init() {
+  const now = new Date();
+  document.getElementById('datePill').textContent = now.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+  selectedMeal = getMealByTime();
+  renderCats();
+  renderQuick();
+  render();
+}
+
+function render() {
+  renderProgress();
+  renderStrip();
+  renderLog();
+  renderStatsTab();
+}
+
+// ── PROGRESS ──────────────────────────────────────────
+function renderProgress() {
+  const totCal = state.foods.reduce((s, f) => s + f.cal, 0);
+  const totProt = state.foods.reduce((s, f) => s + f.prot, 0);
+  const pCal = Math.min(totCal / state.goalCal, 1);
+  const pProt = Math.min(totProt / state.goalProt, 1);
+  document.getElementById('calCur').textContent = totCal;
+  document.getElementById('protCur').textContent = totProt;
+  document.getElementById('calGoalN').textContent = state.goalCal;
+  document.getElementById('protGoalN').textContent = state.goalProt;
+  document.getElementById('calFill').style.width = (pCal * 100) + '%';
+  document.getElementById('protFill').style.width = (pProt * 100) + '%';
+}
+
+function renderStrip() {
+  const totCal = state.foods.reduce((s, f) => s + f.cal, 0);
+  const totProt = state.foods.reduce((s, f) => s + f.prot, 0);
+  const rem = Math.max(state.goalCal - totCal, 0);
+  const avg = state.foods.length ? Math.round(totCal / state.foods.length) : '—';
+  document.getElementById('sCalRem').textContent = rem;
+  document.getElementById('sItems').textContent = state.foods.length;
+  document.getElementById('sAvgCal').textContent = avg;
+  document.getElementById('sProt').textContent = totProt + 'g';
+}
+
+// ── QUICK ─────────────────────────────────────────────
+function renderCats() {
+  document.getElementById('catScroll').innerHTML = CATS.map(c =>
+    `<div class="cat-chip${c === activeCat ? ' active' : ''}" onclick="setCat('${c}')">${c}</div>`
+  ).join('');
+}
+
+function setCat(cat) {
+  activeCat = cat;
+  renderCats();
+  renderQuick();
+}
+
+function renderQuick(filter = '') {
+  const q = filter.toLowerCase();
+  const items = FOODS.filter(f =>
+    (activeCat === 'Todos' || f.cat === activeCat) &&
+    (!q || f.name.toLowerCase().includes(q))
+  );
+  document.getElementById('quickGrid').innerHTML = items.length
+    ? items.map((f, i) => `
+      <div class="quick-card" onclick="quickAdd(${FOODS.indexOf(f)})">
+        <div class="q-icon">${f.icon}</div>
+        <div class="q-info">
+          <div class="q-name">${f.name}</div>
+          <div class="q-macros">
+            <span class="q-cal">⚡${f.cal}</span>
+            <span class="q-prot">💪${f.prot}g</span>
+          </div>
+        </div>
+        <div class="q-add">+</div>
+      </div>`).join('')
+    : `<div style="color:var(--muted);font-size:13px;padding:10px 0;grid-column:span 2">Sin resultados</div>`;
+}
+
+function filterQuick() {
+  renderQuick(document.getElementById('searchInp').value);
+}
+
+function quickAdd(idx) {
+  const f = FOODS[idx];
+  const now = new Date();
+  state.foods.push({
+    id: Date.now() + Math.random(),
+    name: f.name, cal: f.cal, prot: f.prot, icon: f.icon,
+    meal: getMealByTime(),
+    time: now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+  });
+  save(); render();
+  if (navigator.vibrate) navigator.vibrate(25);
+}
+
+// ── LOG ───────────────────────────────────────────────
+function renderLog() {
+  const log = document.getElementById('foodLog');
+  if (!state.foods.length) {
+    log.innerHTML = `<div class="empty"><span class="empty-emoji">🍽️</span>Sin registros aún.<br>Usa los accesos rápidos o el botón +</div>`;
+    return;
+  }
+  const meals = ['Desayuno', 'Almuerzo', 'Cena', 'Snack'];
+  log.innerHTML = meals.map(meal => {
+    const items = state.foods.filter(f => f.meal === meal);
+    if (!items.length) return '';
+    const mCal = items.reduce((s, f) => s + f.cal, 0);
+    const mProt = items.reduce((s, f) => s + f.prot, 0);
+    return `<div class="meal-group">
+      <div class="meal-group-title">
+        <span>${MEAL_EMOJIS[meal]} ${meal}</span>
+        <span class="meal-group-total">⚡${mCal} kcal · 💪${mProt}g</span>
+      </div>
+      ${items.map(f => `
+        <div class="food-item">
+          <div class="f-icon">${f.icon}</div>
+          <div class="f-info">
+            <div class="f-name">${f.name}</div>
+            <div class="f-macros">
+              <span class="f-cal">⚡ ${f.cal} kcal</span>
+              <span class="f-prot">💪 ${f.prot}g</span>
+            </div>
+          </div>
+          <div class="f-right">
+            <span class="f-time">${f.time}</span>
+            <button class="del-btn" onclick="delFood('${f.id}')">✕</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function delFood(id) {
+  state.foods = state.foods.filter(f => String(f.id) !== String(id));
+  save(); render();
+}
+
+// ── STATS TAB ────────────────────────────────────────
+function renderStatsTab() {
+  const totCal = state.foods.reduce((s, f) => s + f.cal, 0);
+  const totProt = state.foods.reduce((s, f) => s + f.prot, 0);
+  const rem = Math.max(state.goalCal - totCal, 0);
+  const pCal = Math.min(totCal / state.goalCal * 100, 100);
+  const pProt = Math.min(totProt / state.goalProt * 100, 100);
+  document.getElementById('st-cal').textContent = totCal + ' kcal';
+  document.getElementById('st-prot').textContent = totProt + 'g';
+  document.getElementById('st-items').textContent = state.foods.length;
+  document.getElementById('st-rem').textContent = rem + ' kcal';
+  document.getElementById('st-calpct').textContent = Math.round(pCal) + '%';
+  document.getElementById('st-protpct').textContent = Math.round(pProt) + '%';
+  document.getElementById('st-calbar').style.width = pCal + '%';
+  document.getElementById('st-protbar').style.width = pProt + '%';
+
+  const meals = ['Desayuno', 'Almuerzo', 'Cena', 'Snack'];
+  document.getElementById('st-meals').innerHTML = meals.map(meal => {
+    const items = state.foods.filter(f => f.meal === meal);
+    if (!items.length) return '';
+    const mCal = items.reduce((s, f) => s + f.cal, 0);
+    const mProt = items.reduce((s, f) => s + f.prot, 0);
+    return `<div class="meal-stat-row">
+      <span>${MEAL_EMOJIS[meal]} ${meal}</span>
+      <div class="meal-stat-badges">
+        <span class="badge-cal">⚡${mCal}</span>
+        <span class="badge-prot">💪${mProt}g</span>
+      </div>
+    </div>`;
+  }).join('') || `<div style="color:var(--muted);font-size:13px;padding:8px 0">Sin registros</div>`;
+}
+
+// ── MODALS ────────────────────────────────────────────
+function openAdd() {
+  selectedMeal = getMealByTime();
+  document.querySelectorAll('.m-chip').forEach(c => c.classList.toggle('sel', c.dataset.m === selectedMeal));
+  document.getElementById('inpName').value = '';
+  document.getElementById('inpCal').value = '';
+  document.getElementById('inpProt').value = '';
+  document.getElementById('addOverlay').classList.add('show');
+  setTimeout(() => document.getElementById('inpName').focus(), 300);
+}
+
+function selMeal(el) {
+  document.querySelectorAll('.m-chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedMeal = el.dataset.m;
+}
+
+function addFood() {
+  const name = document.getElementById('inpName').value.trim();
+  const cal = parseInt(document.getElementById('inpCal').value) || 0;
+  const prot = parseFloat(document.getElementById('inpProt').value) || 0;
+  if (!name) {
+    document.getElementById('inpName').style.borderColor = 'var(--danger)';
+    setTimeout(() => document.getElementById('inpName').style.borderColor = '', 1000);
+    return;
+  }
+  const icon = ICONS[Math.floor(Math.random() * ICONS.length)];
+  const now = new Date();
+  state.foods.push({
+    id: Date.now() + Math.random(), name, cal, prot, icon,
+    meal: selectedMeal,
+    time: now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+  });
+  save(); closeOverlay('addOverlay'); render();
+  if (navigator.vibrate) navigator.vibrate(25);
+}
+
+function openGoal() {
+  document.getElementById('inpGoalCal').value = state.goalCal;
+  document.getElementById('inpGoalProt').value = state.goalProt;
+  document.getElementById('goalOverlay').classList.add('show');
+}
+
+function saveGoal() {
+  state.goalCal = parseInt(document.getElementById('inpGoalCal').value) || 2000;
+  state.goalProt = parseInt(document.getElementById('inpGoalProt').value) || 150;
+  save(); closeOverlay('goalOverlay'); render();
+}
+
+function closeOverlay(id) { document.getElementById(id).classList.remove('show'); }
+
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+});
+
+function resetDay() {
+  if (confirm('¿Reiniciar el registro de hoy?')) { state.foods = []; save(); render(); }
+}
+
+// ── TABS ──────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('navHome').classList.toggle('active', tab === 'home');
+  document.getElementById('navStats').classList.toggle('active', tab === 'stats');
+  document.getElementById('mainTab').classList.toggle('hide', tab !== 'home');
+  document.getElementById('statsTab').classList.toggle('show', tab === 'stats');
+  if (tab === 'stats') renderStatsTab();
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function getMealByTime() {
+  const h = new Date().getHours();
+  if (h < 11) return 'Desayuno';
+  if (h < 15) return 'Almuerzo';
+  if (h < 20) return 'Cena';
+  return 'Snack';
+}
+
+init();
+</script>
+</body>
+</html>
