@@ -31,48 +31,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* CONNECT SCREEN */
-.connect-screen {
-  position: fixed; inset: 0; z-index: 200;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 32px 28px;
-  text-align: center;
-}
-.connect-screen.hidden { display: none; }
-.connect-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -1px; margin-bottom: 8px; }
-.connect-logo span { color: var(--accent); }
-.connect-sub { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 36px; max-width: 300px; }
-.connect-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 20px; padding: 22px 20px; width: 100%;
-  margin-bottom: 12px; cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-  text-align: left;
-}
-.connect-card:active { background: var(--card2); }
-.connect-card-icon { font-size: 28px; margin-bottom: 8px; }
-.connect-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.connect-card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.connect-warn { font-size: 11px; color: var(--muted); margin-top: 20px; line-height: 1.6; }
-.connect-warn a { color: var(--accent2); text-decoration: none; }
-.connect-card.new { border-color: rgba(200,245,66,0.3); }
-.connect-card.new .connect-card-title { color: var(--accent); }
-
-/* FILE STATUS BAR */
-.file-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 20px; background: rgba(200,245,66,0.06);
-  border-bottom: 1px solid rgba(200,245,66,0.15);
-  font-size: 11px;
-}
-.file-bar.hidden { display: none; }
-.file-name { color: var(--accent); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
-.file-status { color: var(--muted); display: flex; align-items: center; gap: 6px; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
-.reconnect-btn { font-size: 11px; color: var(--muted); background: none; border: 1px solid var(--border); padding: 3px 9px; border-radius: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-
 /* HEADER */
 .header {
   padding: 52px 20px 14px;
@@ -176,6 +134,23 @@ body {
 .fill.cal { background: linear-gradient(90deg, var(--accent), #a8d400); }
 .fill.prot { background: linear-gradient(90deg, var(--accent2), #00a8cc); }
 
+/* DATA CARD (export/import) */
+.data-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px; margin-bottom: 10px;
+}
+.data-card-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.data-card-desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+.data-btns { display: flex; gap: 8px; }
+.data-btn {
+  flex: 1; padding: 11px 8px; border-radius: 11px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.data-btn.primary { background: rgba(200,245,66,0.1); border-color: rgba(200,245,66,0.3); color: var(--accent); }
+.data-btn:active { opacity: 0.7; }
+
 /* HISTORY TAB */
 .history-tab { display: none; padding: 16px 20px 0; }
 .history-tab.show { display: block; }
@@ -196,9 +171,7 @@ body {
 .hist-prot { font-size: 12px; color: var(--accent2); font-weight: 500; }
 .hist-chevron { color: var(--muted); font-size: 13px; transition: transform 0.2s; display: inline-block; }
 .hist-chevron.open { transform: rotate(90deg); }
-
 .hist-bar-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 10px; margin-bottom: 4px; }
-.hist-bar-pct { color: var(--accent); }
 
 .hist-detail { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px; }
 .hist-meal-group { margin-bottom: 10px; }
@@ -240,7 +213,6 @@ body {
 .sheet-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 800; margin-bottom: 16px; }
 .sheet-title span { color: var(--accent); }
 
-/* QUICK inside sheet */
 .sheet-search { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 10px 14px 10px 36px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; margin-bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23606060' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 12px center; transition: border-color 0.2s; }
 .sheet-search:focus { border-color: var(--accent); }
 .cat-scroll { display: flex; gap: 7px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-bottom: 12px; padding-bottom: 2px; }
@@ -257,12 +229,10 @@ body {
 .q-prot { font-size: 11px; color: var(--accent2); font-weight: 500; }
 .q-plus { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #0a0a0a; font-size: 18px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
 
-/* DIVIDER */
 .divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 14px; }
 .divider span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; }
 .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border); }
 
-/* MANUAL FORM */
 .field { margin-bottom: 12px; }
 .field-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 5px; }
 .field-inp { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 13px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
@@ -276,48 +246,20 @@ body {
 .btn-ok { flex: 2; background: var(--accent); border: none; border-radius: 13px; padding: 14px; color: #0a0a0a; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; }
 .btn-cancel:active, .btn-ok:active { opacity: 0.7; }
 
-/* SAVE INDICATOR */
-.save-toast {
+/* TOAST */
+.toast {
   position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
   background: rgba(200,245,66,0.15); border: 1px solid rgba(200,245,66,0.3);
-  border-radius: 20px; padding: 6px 14px;
-  font-size: 11px; color: var(--accent);
+  border-radius: 20px; padding: 6px 16px;
+  font-size: 12px; color: var(--accent);
   opacity: 0; pointer-events: none;
   transition: opacity 0.3s; z-index: 150;
+  white-space: nowrap;
 }
-.save-toast.show { opacity: 1; }
+.toast.show { opacity: 1; }
 </style>
 </head>
 <body>
-
-<!-- CONNECT SCREEN -->
-<div class="connect-screen" id="connectScreen">
-  <div class="connect-logo">Nutri<span>Track</span></div>
-  <p class="connect-sub">Conecta tu archivo <code style="color:var(--accent2);font-size:12px">nutritrack.json</code> para guardar y consultar tu historial de nutrición.</p>
-
-  <div class="connect-card new" onclick="createFile()">
-    <div class="connect-card-icon">✨</div>
-    <div class="connect-card-title">Crear nuevo archivo</div>
-    <div class="connect-card-desc">Primera vez usando NutriTrack. Crea tu archivo de datos en la ubicación que prefieras.</div>
-  </div>
-
-  <div class="connect-card" onclick="openFile()">
-    <div class="connect-card-icon">📂</div>
-    <div class="connect-card-title">Abrir archivo existente</div>
-    <div class="connect-card-desc">Ya tienes un <code style="font-size:11px">nutritrack.json</code>. Selecciónalo para cargar tu historial.</div>
-  </div>
-
-  <p class="connect-warn">
-    Requiere Chrome, Edge o Brave.<br>
-    Tu archivo JSON queda <strong style="color:var(--text)">solo en tu dispositivo</strong>, nunca se sube a ningún servidor.
-  </p>
-</div>
-
-<!-- FILE STATUS BAR -->
-<div class="file-bar hidden" id="fileBar">
-  <span>📄 <span class="file-name" id="fileName">nutritrack.json</span></span>
-  <span class="file-status"><span class="dot"></span> conectado &nbsp;<button class="reconnect-btn" onclick="showConnectScreen()">cambiar</button></span>
-</div>
 
 <div class="header">
   <div class="header-row">
@@ -396,6 +338,17 @@ body {
     <div style="font-size:12px;display:flex;justify-content:space-between;margin:10px 0 5px"><span>Proteína</span><span id="st-ppct" style="color:var(--accent2)">0%</span></div>
     <div class="track"><div class="fill prot" id="st-pbar" style="width:0%"></div></div>
   </div>
+
+  <!-- EXPORT / IMPORT -->
+  <div class="data-card">
+    <div class="data-card-title">Datos</div>
+    <div class="data-card-desc">Exporta tu historial completo como JSON para hacer una copia de seguridad o transferirlo a otro dispositivo.</div>
+    <div class="data-btns">
+      <button class="data-btn primary" onclick="exportJSON()">⬇ Exportar JSON</button>
+      <button class="data-btn" onclick="document.getElementById('importInput').click()">⬆ Importar JSON</button>
+    </div>
+    <input type="file" id="importInput" accept=".json" style="display:none" onchange="importJSON(event)"/>
+  </div>
 </div>
 
 <!-- HISTORY TAB -->
@@ -457,11 +410,10 @@ body {
   </div>
 </div>
 
-<!-- SAVE TOAST -->
-<div class="save-toast" id="saveToast">✓ Guardado</div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ─── FOOD DATABASE ───────────────────────────────────────────────────────────
+// ─── FOOD DATABASE ────────────────────────────────────────────────────────────
 const FOODS = [
   { name:'Pechuga pollo', cal:165, prot:31, icon:'🍗', cat:'Proteína' },
   { name:'Pechuga pavo', cal:135, prot:29, icon:'🦃', cat:'Proteína' },
@@ -505,16 +457,17 @@ const FOODS = [
 const CATS = ['Todos','Proteína','Lácteos','Carbos','Verduras','Snacks'];
 const ME = { Desayuno:'🌅', Almuerzo:'☀️', Cena:'🌙', Snack:'🍎' };
 const ICONS = ['🥩','🍖','🥘','🥙','🫕','🧆','🥞','🫙','🍱','🥪','🌮','🫔'];
+const DB_KEY = 'nutritrack_db';
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-let fileHandle = null;
-let db = { version: 1, goals: { cal: 2000, prot: 150 }, days: {} };
 const todayKey = (() => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 })();
 
-// Compatibility proxy so existing code using state.foods / state.goalCal works unchanged
+let db = loadDB();
+
+// Proxy so existing references to state.foods / state.goalCal still work
 const state = {
   get foods() { return getTodayData().foods; },
   set foods(v) { getTodayData().foods = v; },
@@ -532,94 +485,85 @@ function getTodayData() {
 let activeCat = 'Todos';
 let selMealVal = 'Desayuno';
 
-// ─── FILE SYSTEM ACCESS API ───────────────────────────────────────────────────
-async function openFile() {
-  if (!window.showOpenFilePicker) { alert('Tu navegador no soporta esta función. Usa Chrome, Edge o Brave.'); return; }
+// ─── PERSISTENCE (localStorage, funciona en todos los navegadores) ────────────
+function loadDB() {
   try {
-    [fileHandle] = await window.showOpenFilePicker({
-      types: [{ description: 'NutriTrack JSON', accept: { 'application/json': ['.json'] } }],
-      multiple: false
-    });
-    const file = await fileHandle.getFile();
-    const text = await file.text();
-    try {
-      const parsed = JSON.parse(text);
-      if (parsed.version && parsed.days) {
-        db = parsed;
-        // Ensure goals exist (older format compat)
-        if (!db.goals) db.goals = { cal: 2000, prot: 150 };
-      }
-    } catch(e) { console.warn('JSON inválido, empezando con datos vacíos'); }
-    migrateFromLocalStorage();
-    onFileConnected(file.name);
-  } catch(e) {
-    if (e.name !== 'AbortError') console.error(e);
-  }
-}
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.version && parsed.days) return parsed;
+    }
+  } catch(e) { /* noop */ }
 
-async function createFile() {
-  if (!window.showSaveFilePicker) { alert('Tu navegador no soporta esta función. Usa Chrome, Edge o Brave.'); return; }
+  // Intentar migrar datos del formato anterior (clave 'nt3')
   try {
-    fileHandle = await window.showSaveFilePicker({
-      suggestedName: 'nutritrack.json',
-      types: [{ description: 'NutriTrack JSON', accept: { 'application/json': ['.json'] } }]
-    });
-    migrateFromLocalStorage();
-    await writeToFile();
-    const f = await fileHandle.getFile();
-    onFileConnected(f.name);
-  } catch(e) {
-    if (e.name !== 'AbortError') console.error(e);
-  }
-}
+    const old = JSON.parse(localStorage.getItem('nt3') || '{}');
+    if (old.foods && old.foods.length && old.date) {
+      const d = new Date(old.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const newDB = {
+        version: 1,
+        goals: { cal: old.goalCal || 2000, prot: old.goalProt || 150 },
+        days: { [key]: { foods: old.foods } }
+      };
+      localStorage.setItem(DB_KEY, JSON.stringify(newDB));
+      return newDB;
+    }
+  } catch(e) { /* noop */ }
 
-async function writeToFile() {
-  if (!fileHandle) return;
-  try {
-    const writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(db, null, 2));
-    await writable.close();
-  } catch(e) { console.error('Error al guardar:', e); }
+  return { version: 1, goals: { cal: 2000, prot: 150 }, days: {} };
 }
 
 function save() {
-  writeToFile().then(() => showSaveToast());
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-function showSaveToast() {
-  const t = document.getElementById('saveToast');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1400);
+// ─── EXPORT / IMPORT JSON ─────────────────────────────────────────────────────
+function exportJSON() {
+  const json = JSON.stringify(db, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `nutritrack-${todayKey}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Exportado correctamente');
 }
 
-// Migrate existing localStorage data (one-time)
-function migrateFromLocalStorage() {
-  try {
-    const s = JSON.parse(localStorage.getItem('nt3') || '{}');
-    if (!s.foods || !s.foods.length || !s.date) return;
-    const d = new Date(s.date);
-    if (isNaN(d)) return;
-    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    if (!db.days[key] || !db.days[key].foods.length) {
-      db.days[key] = { foods: s.foods };
-      if (s.goalCal) db.goals.cal = s.goalCal;
-      if (s.goalProt) db.goals.prot = s.goalProt;
-      console.log('Datos de localStorage migrados al JSON:', key);
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.version || !parsed.days) throw new Error('Formato inválido');
+      // Merge: conservar días locales que no estén en el archivo importado
+      const merged = { ...parsed };
+      Object.keys(db.days).forEach(key => {
+        if (!merged.days[key]) merged.days[key] = db.days[key];
+      });
+      db = merged;
+      save();
+      render();
+      showToast('✓ Datos importados correctamente');
+    } catch(err) {
+      showToast('✗ Archivo inválido');
     }
-  } catch(e) { /* noop */ }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // reset input
 }
 
-function onFileConnected(name) {
-  document.getElementById('connectScreen').classList.add('hidden');
-  document.getElementById('fileBar').classList.remove('hidden');
-  document.getElementById('fileName').textContent = name || 'nutritrack.json';
-  render();
-}
-
-function showConnectScreen() {
-  fileHandle = null;
-  document.getElementById('connectScreen').classList.remove('hidden');
-  document.getElementById('fileBar').classList.add('hidden');
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
@@ -628,11 +572,7 @@ function init() {
   selMealVal = getMealByTime();
   renderCats();
   renderQuick();
-  // Check if File System Access API is supported
-  if (!window.showOpenFilePicker) {
-    document.querySelector('.connect-warn').innerHTML =
-      '⚠️ Tu navegador no soporta el acceso a archivos locales.<br>Usa <strong style="color:var(--text)">Chrome, Edge o Brave</strong> para esta función.';
-  }
+  render();
 }
 
 function render() {
@@ -693,6 +633,29 @@ function renderLog() {
   }).join('');
 }
 
+function renderStatsTab() {
+  const totCal = state.foods.reduce((s,f)=>s+f.cal, 0);
+  const totProt = state.foods.reduce((s,f)=>s+f.prot, 0);
+  const pCal = Math.min(totCal/state.goalCal*100, 100);
+  const pProt = Math.min(totProt/state.goalProt*100, 100);
+  document.getElementById('st-cal').textContent = totCal+' kcal';
+  document.getElementById('st-prot').textContent = totProt+'g';
+  document.getElementById('st-rem').textContent = Math.max(state.goalCal-totCal,0)+' kcal';
+  document.getElementById('st-items').textContent = state.foods.length;
+  document.getElementById('st-cpct').textContent = Math.round(pCal)+'%';
+  document.getElementById('st-ppct').textContent = Math.round(pProt)+'%';
+  document.getElementById('st-cbar').style.width = pCal+'%';
+  document.getElementById('st-pbar').style.width = pProt+'%';
+  const meals = ['Desayuno','Almuerzo','Cena','Snack'];
+  document.getElementById('st-meals').innerHTML = meals.map(meal => {
+    const items = state.foods.filter(f=>f.meal===meal);
+    if (!items.length) return '';
+    const mCal = items.reduce((s,f)=>s+f.cal, 0);
+    const mProt = items.reduce((s,f)=>s+f.prot, 0);
+    return `<div class="stat-row"><span>${ME[meal]} ${meal}</span><span style="display:flex;gap:10px"><span style="color:var(--accent);font-size:12px">⚡${mCal}</span><span style="color:var(--accent2);font-size:12px">💪${mProt}g</span></span></div>`;
+  }).join('') || `<div style="color:var(--muted);font-size:13px;padding:8px 0">Sin registros</div>`;
+}
+
 function renderHistory() {
   const days = Object.keys(db.days)
     .filter(k => k !== todayKey && db.days[k].foods && db.days[k].foods.length)
@@ -703,7 +666,6 @@ function renderHistory() {
     container.innerHTML = `<div class="hist-empty"><span class="hist-empty-emoji">📅</span>Aún no hay días anteriores.<br>Tu historial irá apareciendo aquí día a día.</div>`;
     return;
   }
-
   container.innerHTML = days.map(day => {
     const data = db.days[day];
     const totCal = data.foods.reduce((s,f) => s+f.cal, 0);
@@ -721,13 +683,9 @@ function renderHistory() {
             <span class="hist-chevron" id="chev-${day}">▸</span>
           </div>
         </div>
-        <div class="hist-bar-row">
-          <span>Calorías</span><span class="hist-bar-pct">${Math.round(pCal)}% de meta</span>
-        </div>
+        <div class="hist-bar-row"><span>Calorías</span><span style="color:var(--accent)">${Math.round(pCal)}%</span></div>
         <div class="track"><div class="fill cal" style="width:${pCal}%"></div></div>
-        <div class="hist-bar-row" style="margin-top:8px">
-          <span>Proteína</span><span style="color:var(--accent2);font-size:11px">${Math.round(pProt)}% de meta</span>
-        </div>
+        <div class="hist-bar-row" style="margin-top:8px"><span>Proteína</span><span style="color:var(--accent2)">${Math.round(pProt)}%</span></div>
         <div class="track"><div class="fill prot" style="width:${pProt}%"></div></div>
         <div class="hist-detail" id="detail-${day}" style="display:none">
           ${renderHistDetail(data)}
@@ -768,7 +726,6 @@ function toggleHistDay(day) {
 }
 
 function formatHistDate(key) {
-  // key is YYYY-MM-DD — add T12:00 to avoid timezone issues
   const d = new Date(key + 'T12:00:00');
   return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
 }
@@ -877,31 +834,7 @@ document.querySelectorAll('.overlay').forEach(o =>
   o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); })
 );
 
-// ─── STATS TAB ────────────────────────────────────────────────────────────────
-function renderStatsTab() {
-  const totCal = state.foods.reduce((s,f)=>s+f.cal, 0);
-  const totProt = state.foods.reduce((s,f)=>s+f.prot, 0);
-  const pCal = Math.min(totCal/state.goalCal*100, 100);
-  const pProt = Math.min(totProt/state.goalProt*100, 100);
-  document.getElementById('st-cal').textContent = totCal+' kcal';
-  document.getElementById('st-prot').textContent = totProt+'g';
-  document.getElementById('st-rem').textContent = Math.max(state.goalCal-totCal,0)+' kcal';
-  document.getElementById('st-items').textContent = state.foods.length;
-  document.getElementById('st-cpct').textContent = Math.round(pCal)+'%';
-  document.getElementById('st-ppct').textContent = Math.round(pProt)+'%';
-  document.getElementById('st-cbar').style.width = pCal+'%';
-  document.getElementById('st-pbar').style.width = pProt+'%';
-  const meals = ['Desayuno','Almuerzo','Cena','Snack'];
-  document.getElementById('st-meals').innerHTML = meals.map(meal => {
-    const items = state.foods.filter(f=>f.meal===meal);
-    if (!items.length) return '';
-    const mCal = items.reduce((s,f)=>s+f.cal, 0);
-    const mProt = items.reduce((s,f)=>s+f.prot, 0);
-    return `<div class="stat-row"><span>${ME[meal]} ${meal}</span><span style="display:flex;gap:10px"><span style="color:var(--accent);font-size:12px">⚡${mCal}</span><span style="color:var(--accent2);font-size:12px">💪${mProt}g</span></span></div>`;
-  }).join('') || `<div style="color:var(--muted);font-size:13px;padding:8px 0">Sin registros</div>`;
-}
-
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+// ─── NAV ──────────────────────────────────────────────────────────────────────
 function switchTab(tab) {
   document.getElementById('navHome').classList.toggle('active', tab==='home');
   document.getElementById('navStats').classList.toggle('active', tab==='stats');
@@ -911,7 +844,6 @@ function switchTab(tab) {
   document.getElementById('historyTab').classList.toggle('show', tab==='history');
 }
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
 function getMealByTime() {
   const h = new Date().getHours();
   if (h < 11) return 'Desayuno';
