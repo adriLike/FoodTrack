@@ -257,6 +257,9 @@ body {
 .btn-ok { flex: 2; background: var(--accent); border: none; border-radius: 13px; padding: 14px; color: #0a0a0a; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; }
 .btn-cancel:active, .btn-ok:active { opacity: 0.7; }
 
+.portion-preview { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 12px; }
+.pp-badge { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--card2); }
+
 /* TOAST */
 .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(200,245,66,0.15); border: 1px solid rgba(200,245,66,0.3); border-radius: 20px; padding: 6px 16px; font-size: 12px; color: var(--accent); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 150; white-space: nowrap; }
 .toast.show { opacity: 1; }
@@ -458,6 +461,24 @@ body {
   </div>
 </div>
 
+<!-- PORTION SHEET -->
+<div class="overlay" id="portionOverlay">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title" id="portionTitle">Porción</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">valores por 100 g — ajusta la cantidad</div>
+    <div class="field">
+      <div class="field-lbl">Cantidad (gramos)</div>
+      <input class="field-inp" id="inpGrams" type="number" inputmode="decimal" placeholder="100" oninput="updatePortionPreview()"/>
+    </div>
+    <div class="portion-preview" id="portionPreview"></div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeOverlay('portionOverlay')">Cancelar</button>
+      <button class="btn-ok" onclick="confirmPortion()">Añadir ✓</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -533,6 +554,7 @@ function getTodayData() {
 
 let activeCat  = 'Todos';
 let selMealVal = 'Desayuno';
+let portionFood = null;
 
 // ─── PERSISTENCE ─────────────────────────────────────────────────────────────
 function loadDB() {
@@ -902,19 +924,55 @@ function renderQuick(q='') {
 function filterQuick() { renderQuick(document.getElementById('searchInp').value); }
 
 // ─── ACTIONS ──────────────────────────────────────────────────────────────────
-function quickAdd(idx) {
-  const f   = FOODS[idx];
+function openPortion(idx) {
+  portionFood = FOODS[idx];
+  document.getElementById('portionTitle').innerHTML = `${portionFood.icon} <span>${portionFood.name}</span>`;
+  document.getElementById('inpGrams').value = '100';
+  updatePortionPreview();
+  document.getElementById('portionOverlay').classList.add('show');
+}
+
+function updatePortionPreview() {
+  if (!portionFood) return;
+  const g   = parseFloat(document.getElementById('inpGrams').value) || 0;
+  const cal = Math.round(portionFood.cal * g / 100);
+  const r   = v => Math.round(v * g / 100 * 10) / 10;
+  document.getElementById('portionPreview').innerHTML = `
+    <span class="pp-badge" style="color:var(--accent)">⚡${cal} kcal</span>
+    <span class="pp-badge" style="color:var(--accent2)">💪${r(portionFood.prot)}g</span>
+    <span class="pp-badge" style="color:var(--accent3)">🌾${r(portionFood.carbs)}g</span>
+    <span class="pp-badge" style="color:var(--accent4)">🧈${r(portionFood.fat)}g</span>
+    <span class="pp-badge" style="color:var(--accent5)">🌿${r(portionFood.fiber)}g</span>`;
+}
+
+function confirmPortion() {
+  if (!portionFood) return;
+  const g   = parseFloat(document.getElementById('inpGrams').value) || 100;
+  const cal = Math.round(portionFood.cal * g / 100);
+  const r   = v => Math.round(v * g / 100 * 10) / 10;
   const now = new Date();
   state.foods.push({
-    id:    Date.now()+Math.random(),
-    name:  f.name, cal: f.cal, prot: f.prot,
-    carbs: f.carbs, fat: f.fat, fiber: f.fiber,
-    icon:  f.icon, meal: getMealByTime(),
-    time:  now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})
+    id:    Date.now() + Math.random(),
+    name:  portionFood.name,
+    cal,
+    prot:  r(portionFood.prot),
+    carbs: r(portionFood.carbs),
+    fat:   r(portionFood.fat),
+    fiber: r(portionFood.fiber),
+    icon:  portionFood.icon,
+    meal:  selMealVal,
+    grams: g,
+    time:  now.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' })
   });
   save(); renderProgress(); renderLog();
   if (navigator.vibrate) navigator.vibrate(20);
+  closeOverlay('portionOverlay');
   closeOverlay('addOverlay');
+  portionFood = null;
+}
+
+function quickAdd(idx) {
+  openPortion(idx);
 }
 
 function delFood(id) {
