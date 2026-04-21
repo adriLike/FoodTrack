@@ -49,7 +49,7 @@ Each food item row in `renderLog()` gets an edit button (`✎`) in `.f-right`, a
 
 - Tapping opens `#addOverlay` in **edit mode**:
   - Sheet title: `Editar <span>alimento</span>`
-  - All fields pre-filled from the stored entry (name, cal, prot, carbs, fat, fiber, meal, grams if present)
+  - All fields pre-filled from the stored entry (name, cal, prot, carbs, fat, fiber, meal). If the entry has a `grams` value, it is shown as a read-only note below the name field — editing grams does **not** recalculate macros in edit mode. The user edits the absolute stored values directly.
   - Confirm button label: `Guardar ✓`, calls `saveEdit(id)`
   - `saveEdit(id)` splices the entry in-place at its original index, saves, calls `renderProgress(); renderLog()`, closes overlay
 - Cancel exits without changes.
