@@ -550,7 +550,8 @@ function loadDB() {
       const newDB = {
         version: 1,
         goals: { cal: old.goalCal||2000, prot: old.goalProt||150, carbs:250, fat:65, fiber:25 },
-        days: { [key]: { foods: old.foods } }
+        days: { [key]: { foods: old.foods } },
+        favorites: []
       };
       localStorage.setItem(DB_KEY, JSON.stringify(newDB));
       return newDB;
