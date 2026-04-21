@@ -1,0 +1,209 @@
+<style>
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --card: #1a1a1a; --card2: #202020;
+    --border: #2c2c2c; --accent: #c8f542; --accent2: #42d4f5;
+    --accent3: #f5a742; --accent4: #f5d742; --accent5: #42f587;
+    --text: #f0f0f0; --muted: #606060;
+  }
+  .nt-wrap { font-family: 'DM Sans', -apple-system, sans-serif; max-width: 390px; margin: 0 auto; }
+  .nt-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; margin-top: 4px; }
+
+  /* shared food item chrome */
+  .fi { background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 11px 13px; margin-bottom: 7px; display: flex; align-items: center; gap: 11px; }
+  .fi-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .fi-info { flex: 1; min-width: 0; }
+  .fi-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fi-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+  .fi-time  { font-size: 10px; color: var(--muted); }
+  .del-btn  { width: 24px; height: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+  /* OPTION A — current crowded row */
+  .macros-inline { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 3px; }
+  .f-cal   { font-size: 11px; color: var(--accent); }
+  .f-prot  { font-size: 11px; color: var(--accent2); }
+  .f-carbs { font-size: 11px; color: var(--accent3); }
+  .f-fat   { font-size: 11px; color: var(--accent4); }
+  .f-fiber { font-size: 11px; color: var(--accent5); }
+
+  /* OPTION B — two-line: name+cal on row 1, macro chips on row 2 */
+  .b-row1 { display: flex; align-items: baseline; gap: 6px; }
+  .b-cal  { font-size: 12px; color: var(--accent); font-weight: 600; }
+  .b-macros { display: flex; gap: 5px; margin-top: 4px; }
+  .b-chip { font-size: 10px; padding: 2px 6px; border-radius: 20px; border: 1px solid var(--border); background: var(--card2); }
+  .b-p  { color: var(--accent2); }
+  .b-c  { color: var(--accent3); }
+  .b-f  { color: var(--accent4); }
+  .b-fi { color: var(--accent5); }
+
+  /* OPTION C — expandable: collapsed shows name+cal only, tap to expand */
+  .c-collapsed { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .c-cal   { font-size: 12px; color: var(--accent); font-weight: 600; }
+  .c-arrow { font-size: 10px; color: var(--muted); transition: transform 0.2s; margin-left: auto; margin-right: 0; }
+  .c-detail { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); display: none; }
+  .c-detail.open { display: flex; gap: 8px; }
+  .fi-expand { cursor: pointer; }
+  .fi-expand.opened .c-detail { display: flex; }
+  .fi-expand.opened .c-arrow  { transform: rotate(90deg); }
+
+  /* grams badge */
+  .grams-badge { font-size: 10px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1px 6px; margin-left: 4px; }
+
+  .section-wrap { margin-bottom: 28px; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+<h2>¿Cómo mostrar los 5 macros en cada fila?</h2>
+<p class="subtitle">Three layouts for the food log row — same data, different presentation</p>
+
+<div class="cards">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Two-line: primary + macro chips</h3>
+      <p>Name and calories on the first line, macro pills condensed below. All 5 macros always visible — no tap needed.</p>
+      <div class="nt-wrap" style="margin-top:14px">
+        <div class="nt-label">🌅 Desayuno</div>
+        <div class="fi">
+          <div class="fi-icon">🥚</div>
+          <div class="fi-info">
+            <div class="b-row1">
+              <div class="fi-name" style="flex:1">Huevo entero <span class="grams-badge">150g</span></div>
+              <div class="b-cal">⚡117</div>
+            </div>
+            <div class="b-macros">
+              <span class="b-chip b-p">💪9g</span>
+              <span class="b-chip b-c">🌾0.9g</span>
+              <span class="b-chip b-f">🧈7.5g</span>
+              <span class="b-chip b-fi">🌿0g</span>
+            </div>
+          </div>
+          <div class="fi-right">
+            <span class="fi-time">08:32</span>
+            <button class="del-btn">✕</button>
+          </div>
+        </div>
+        <div class="fi">
+          <div class="fi-icon">🥣</div>
+          <div class="fi-info">
+            <div class="b-row1">
+              <div class="fi-name" style="flex:1">Avena <span class="grams-badge">80g</span></div>
+              <div class="b-cal">⚡120</div>
+            </div>
+            <div class="b-macros">
+              <span class="b-chip b-p">💪4g</span>
+              <span class="b-chip b-c">🌾21.6g</span>
+              <span class="b-chip b-f">🧈2g</span>
+              <span class="b-chip b-fi">🌿3.2g</span>
+            </div>
+          </div>
+          <div class="fi-right">
+            <span class="fi-time">08:34</span>
+            <button class="del-btn">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Compact: calories only, tap to expand</h3>
+      <p>Collapsed state shows name + calories (the most-checked value). Tap the row to reveal the other 4 macros inline.</p>
+      <div class="nt-wrap" style="margin-top:14px">
+        <div class="nt-label">🌅 Desayuno</div>
+        <div class="fi fi-expand" onclick="this.classList.toggle('opened')">
+          <div class="fi-icon">🥚</div>
+          <div class="fi-info" style="min-width:0">
+            <div class="c-collapsed">
+              <div class="fi-name">Huevo entero <span class="grams-badge">150g</span></div>
+              <div class="c-cal">⚡117</div>
+              <span class="c-arrow">▸</span>
+            </div>
+            <div class="c-detail">
+              <span class="f-prot">💪9g</span>
+              <span class="f-carbs">🌾0.9g</span>
+              <span class="f-fat">🧈7.5g</span>
+              <span class="f-fiber">🌿0g</span>
+            </div>
+          </div>
+          <div class="fi-right" style="pointer-events:none">
+            <span class="fi-time">08:32</span>
+            <button class="del-btn" onclick="event.stopPropagation()">✕</button>
+          </div>
+        </div>
+        <div class="fi fi-expand" onclick="this.classList.toggle('opened')">
+          <div class="fi-icon">🥣</div>
+          <div class="fi-info" style="min-width:0">
+            <div class="c-collapsed">
+              <div class="fi-name">Avena <span class="grams-badge">80g</span></div>
+              <div class="c-cal">⚡120</div>
+              <span class="c-arrow">▸</span>
+            </div>
+            <div class="c-detail">
+              <span class="f-prot">💪4g</span>
+              <span class="f-carbs">🌾21.6g</span>
+              <span class="f-fat">🧈2g</span>
+              <span class="f-fiber">🌿3.2g</span>
+            </div>
+          </div>
+          <div class="fi-right" style="pointer-events:none">
+            <span class="fi-time">08:34</span>
+            <button class="del-btn" onclick="event.stopPropagation()">✕</button>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:4px">👆 Tap a row to expand</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C — current, as reference -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Current: inline macro row (reference)</h3>
+      <p>All 5 macros as an inline wrapping row below the name. Gets crowded on narrow screens — shown here for comparison.</p>
+      <div class="nt-wrap" style="margin-top:14px">
+        <div class="nt-label">🌅 Desayuno</div>
+        <div class="fi">
+          <div class="fi-icon">🥚</div>
+          <div class="fi-info">
+            <div class="fi-name">Huevo entero</div>
+            <div class="macros-inline">
+              <span class="f-cal">⚡78</span>
+              <span class="f-prot">💪6g</span>
+              <span class="f-carbs">🌾0.6g</span>
+              <span class="f-fat">🧈5g</span>
+              <span class="f-fiber">🌿0g</span>
+            </div>
+          </div>
+          <div class="fi-right">
+            <span class="fi-time">08:32</span>
+            <button class="del-btn">✕</button>
+          </div>
+        </div>
+        <div class="fi">
+          <div class="fi-icon">🥣</div>
+          <div class="fi-info">
+            <div class="fi-name">Avena</div>
+            <div class="macros-inline">
+              <span class="f-cal">⚡150</span>
+              <span class="f-prot">💪5g</span>
+              <span class="f-carbs">🌾27g</span>
+              <span class="f-fat">🧈2.5g</span>
+              <span class="f-fiber">🌿4g</span>
+            </div>
+          </div>
+          <div class="fi-right">
+            <span class="fi-time">08:34</span>
+            <button class="del-btn">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
