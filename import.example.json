@@ -1,0 +1,50 @@
+{
+    "version": 1,
+    "goals": { "cal": 2000, "prot": 150 },
+    "days": {
+      "2026-04-20": {
+        "foods": [
+          {
+            "id": 1745123456789.4,
+            "name": "Pechuga pollo",
+            "cal": 165,
+            "prot": 31,
+            "icon": "🍗",
+            "meal": "Almuerzo",
+            "time": "13:45"
+          },
+          {
+            "id": 1745123456790.2,
+            "name": "Arroz cocido",
+            "cal": 130,
+            "prot": 3,
+            "icon": "🍚",
+            "meal": "Almuerzo",
+            "time": "13:45"
+          },
+          {
+            "id": 1745123456791.8,
+            "name": "Tortilla de espinacas",
+            "cal": 220,
+            "prot": 14,
+            "icon": "🥘",
+            "meal": "Cena",
+            "time": "20:30"
+          }
+        ]
+      },
+      "2026-04-19": {
+        "foods": [
+          {
+            "id": 1745037056789.1,
+            "name": "Avena",
+            "cal": 150,
+            "prot": 5,
+            "icon": "🥣",
+            "meal": "Desayuno",
+            "time": "08:15"
+          }
+        ]
+      }
+    }
+  }
