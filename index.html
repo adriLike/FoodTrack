@@ -136,6 +136,12 @@ body {
 .f-carbs { font-size: 11px; color: var(--accent3); }
 .f-fat   { font-size: 11px; color: var(--accent4); }
 .f-fiber { font-size: 11px; color: var(--accent5); }
+.f-line1 { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+.f-line1 .f-name { flex: 1; margin-bottom: 0; }
+.f-line1 .f-cal  { font-size: 12px; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.f-grams { font-size: 10px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1px 6px; flex-shrink: 0; }
+.f-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.f-chip  { font-size: 10px; padding: 2px 6px; border-radius: 20px; border: 1px solid var(--border); background: var(--card2); }
 .f-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 .f-time  { font-size: 10px; color: var(--muted); }
 .del-btn { width: 24px; height: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -681,13 +687,15 @@ function renderLog() {
         <div class="food-item">
           <div class="f-icon">${f.icon}</div>
           <div class="f-info">
-            <div class="f-name">${f.name}</div>
-            <div class="f-macros">
+            <div class="f-line1">
+              <div class="f-name">${f.name}${f.grams ? `<span class="f-grams">${f.grams}g</span>` : ''}</div>
               <span class="f-cal">⚡${f.cal}</span>
-              <span class="f-prot">💪${f.prot}g</span>
-              <span class="f-carbs">🌾${f.carbs||0}g</span>
-              <span class="f-fat">🧈${f.fat||0}g</span>
-              <span class="f-fiber">🌿${f.fiber||0}g</span>
+            </div>
+            <div class="f-chips">
+              <span class="f-chip" style="color:var(--accent2)">💪${Math.round(f.prot*10)/10}g</span>
+              <span class="f-chip" style="color:var(--accent3)">🌾${Math.round((f.carbs||0)*10)/10}g</span>
+              <span class="f-chip" style="color:var(--accent4)">🧈${Math.round((f.fat||0)*10)/10}g</span>
+              <span class="f-chip" style="color:var(--accent5)">🌿${Math.round((f.fiber||0)*10)/10}g</span>
             </div>
           </div>
           <div class="f-right">
@@ -809,12 +817,12 @@ function renderHistDetail(data) {
       ${items.map(f=>`
         <div class="hist-food-row">
           <span class="hist-food-icon">${f.icon}</span>
-          <span class="hist-food-name">${f.name}</span>
+          <span class="hist-food-name">${f.name}${f.grams ? ` <span style="font-size:10px;color:var(--muted)">${f.grams}g</span>` : ''}</span>
           <span class="hist-food-macros">
             <span style="color:var(--accent);font-size:11px">⚡${f.cal}</span>
-            <span style="color:var(--accent2);font-size:11px">💪${f.prot}g</span>
-            <span style="color:var(--accent3);font-size:11px">🌾${f.carbs||0}g</span>
-            <span style="color:var(--accent4);font-size:11px">🧈${f.fat||0}g</span>
+            <span class="f-chip" style="color:var(--accent2)">💪${Math.round(f.prot*10)/10}g</span>
+            <span class="f-chip" style="color:var(--accent3)">🌾${Math.round((f.carbs||0)*10)/10}g</span>
+            <span class="f-chip" style="color:var(--accent4)">🧈${Math.round((f.fat||0)*10)/10}g</span>
           </span>
         </div>`).join('')}
     </div>`;
