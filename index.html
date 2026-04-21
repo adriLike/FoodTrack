@@ -89,6 +89,10 @@ body {
 .mini-fill.carbs  { background: var(--accent3); }
 .mini-fill.fat    { background: var(--accent4); }
 .mini-fill.fiber  { background: var(--accent5); }
+.ring-cal.over-goal,
+.ring-prot.over-goal  { stroke: var(--danger) !important; }
+.ring-pct.over-goal   { color: var(--danger); }
+.mini-fill.over-goal  { background: var(--danger) !important; }
 .macro-sep { display: none; }
 
 /* LOG SECTION */
@@ -124,9 +128,9 @@ body {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 13px; padding: 11px 13px; margin-bottom: 7px;
   display: flex; align-items: center; gap: 11px;
-  animation: fadeUp 0.2s ease;
+  animation: fadeUp 0.15s cubic-bezier(.4,0,.2,1);
 }
-@keyframes fadeUp { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
 .f-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .f-info { flex: 1; min-width: 0; }
 .f-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
@@ -289,7 +293,7 @@ body {
           <div class="prog-cur" id="curCal" style="color:var(--accent)">0</div>
           <div class="prog-goal">/ <span id="goalCalN">2000</span> kcal</div>
         </div>
-        <div class="prog-rem">Quedan <b id="remCal">2000</b> kcal</div>
+        <div class="prog-rem"><span id="remCalPfx">Quedan</span> <b id="remCal">2000</b> kcal</div>
       </div>
       <button class="edit-goal-btn" onclick="openGoal()">⚙️</button>
     </div>
@@ -309,7 +313,7 @@ body {
           <div class="prog-cur" id="curProt" style="color:var(--accent2)">0</div>
           <div class="prog-goal">/ <span id="goalProtN">150</span> g</div>
         </div>
-        <div class="prog-rem">Quedan <b id="remProt">150</b> g</div>
+        <div class="prog-rem"><span id="remProtPfx">Quedan</span> <b id="remProt">150</b> g</div>
       </div>
     </div>
 
@@ -652,12 +656,39 @@ function renderProgress() {
   document.getElementById('goalFatN').textContent   = state.goalFat;
   document.getElementById('goalFiberN').textContent = state.goalFiber;
 
-  document.getElementById('remCal').textContent  = Math.max(state.goalCal  - totCal,   0);
-  document.getElementById('remProt').textContent = Math.max(state.goalProt - totProt,  0);
-
   document.getElementById('fillCarbs').style.width = (pCarbs*100)+'%';
   document.getElementById('fillFat').style.width   = (pFat*100)+'%';
   document.getElementById('fillFiber').style.width = (pFib*100)+'%';
+
+  // Over-goal warnings
+  const overCal   = totCal   > state.goalCal;
+  const overProt  = totProt  > state.goalProt;
+  const overCarbs = totCarbs > state.goalCarbs;
+  const overFat   = totFat   > state.goalFat;
+  const overFib   = totFiber > state.goalFiber;
+
+  document.getElementById('ringCal').classList.toggle('over-goal',  overCal);
+  document.getElementById('ringProt').classList.toggle('over-goal', overProt);
+  document.getElementById('pctCal').classList.toggle('over-goal',   overCal);
+  document.getElementById('pctProt').classList.toggle('over-goal',  overProt);
+  document.getElementById('fillCarbs').classList.toggle('over-goal', overCarbs);
+  document.getElementById('fillFat').classList.toggle('over-goal',   overFat);
+  document.getElementById('fillFiber').classList.toggle('over-goal', overFib);
+
+  // "Quedan" / "Excedido" text
+  const calPfx  = document.getElementById('remCalPfx');
+  const calVal  = document.getElementById('remCal');
+  const protPfx = document.getElementById('remProtPfx');
+  const protVal = document.getElementById('remProt');
+
+  calPfx.textContent  = overCal  ? 'Excedido' : 'Quedan';
+  calPfx.style.color  = overCal  ? 'var(--danger)' : '';
+  calVal.textContent  = overCal  ? (totCal - state.goalCal)                            : Math.max(state.goalCal - totCal, 0);
+  calVal.style.color  = overCal  ? 'var(--danger)' : '';
+  protPfx.textContent = overProt ? 'Excedido' : 'Quedan';
+  protPfx.style.color = overProt ? 'var(--danger)' : '';
+  protVal.textContent = overProt ? Math.round((totProt - state.goalProt)*10)/10         : Math.max(state.goalProt - totProt, 0);
+  protVal.style.color = overProt ? 'var(--danger)' : '';
 }
 
 function renderLog() {
