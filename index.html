@@ -150,6 +150,9 @@ body {
 .f-time  { font-size: 10px; color: var(--muted); }
 .del-btn { width: 24px; height: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .del-btn:active { background: #2a1111; border-color: var(--danger); color: var(--danger); }
+.edit-btn { width: 24px; height: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.edit-btn:active { background: rgba(200,245,66,0.08); border-color: var(--accent); color: var(--accent); }
+.f-actions { display: flex; gap: 4px; }
 
 .empty { text-align: center; padding: 36px 20px; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .empty-emoji { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.35; }
@@ -414,6 +417,7 @@ body {
     <div class="field">
       <div class="field-lbl">Nombre</div>
       <input class="field-inp" id="inpName" placeholder="Ej: Tortilla de espinacas" autocomplete="off"/>
+      <div id="editGramsNote" style="font-size:11px;color:var(--muted);margin-top:4px;min-height:16px"></div>
     </div>
     <div class="two-col">
       <div class="field"><div class="field-lbl">Calorías</div><input class="field-inp" id="inpCal"  placeholder="0" type="number" inputmode="numeric"/></div>
@@ -435,7 +439,7 @@ body {
     </div>
     <div class="sheet-actions">
       <button class="btn-cancel" onclick="closeOverlay('addOverlay')">Cancelar</button>
-      <button class="btn-ok" onclick="addManual()">Añadir ✓</button>
+      <button class="btn-ok" id="addConfirmBtn" onclick="confirmFood()">Añadir ✓</button>
     </div>
   </div>
 </div>
@@ -555,6 +559,7 @@ function getTodayData() {
 let activeCat  = 'Todos';
 let selMealVal = 'Desayuno';
 let portionFood = null;
+let editingId   = null;
 
 // ─── PERSISTENCE ─────────────────────────────────────────────────────────────
 function loadDB() {
@@ -753,7 +758,10 @@ function renderLog() {
           </div>
           <div class="f-right">
             <span class="f-time">${f.time}</span>
-            <button class="del-btn" onclick="delFood('${f.id}')">✕</button>
+            <div class="f-actions">
+              <button class="edit-btn" onclick="openEdit('${f.id}')">✎</button>
+              <button class="del-btn" onclick="delFood('${f.id}')">✕</button>
+            </div>
           </div>
         </div>`).join('')}
     </div>`;
@@ -971,6 +979,55 @@ function confirmPortion() {
   portionFood = null;
 }
 
+function confirmFood() {
+  if (editingId) saveEdit();
+  else addManual();
+}
+
+function openEdit(id) {
+  const f = state.foods.find(x => String(x.id) === String(id));
+  if (!f) return;
+  editingId = id;
+  document.getElementById('inpName').value  = f.name;
+  document.getElementById('inpCal').value   = f.cal;
+  document.getElementById('inpProt').value  = f.prot;
+  document.getElementById('inpCarbs').value = f.carbs || 0;
+  document.getElementById('inpFat').value   = f.fat   || 0;
+  document.getElementById('inpFiber').value = f.fiber || 0;
+  document.querySelectorAll('.m-chip').forEach(c => c.classList.toggle('sel', c.dataset.m === f.meal));
+  selMealVal = f.meal;
+  document.querySelector('#addOverlay .sheet-title').innerHTML = 'Editar <span>alimento</span>';
+  document.getElementById('addConfirmBtn').textContent = 'Guardar ✓';
+  document.getElementById('editGramsNote').textContent = f.grams ? `Porción original: ${f.grams}g` : '';
+  document.getElementById('searchInp').value = '';
+  renderQuick();
+  document.getElementById('addOverlay').classList.add('show');
+}
+
+function saveEdit() {
+  const name = document.getElementById('inpName').value.trim();
+  if (!name) {
+    document.getElementById('inpName').style.borderColor = 'var(--danger)';
+    setTimeout(() => document.getElementById('inpName').style.borderColor = '', 1000);
+    return;
+  }
+  const idx = state.foods.findIndex(x => String(x.id) === String(editingId));
+  if (idx === -1) return;
+  state.foods[idx] = {
+    ...state.foods[idx],
+    name,
+    cal:   parseInt(document.getElementById('inpCal').value)    || 0,
+    prot:  parseFloat(document.getElementById('inpProt').value)  || 0,
+    carbs: parseFloat(document.getElementById('inpCarbs').value) || 0,
+    fat:   parseFloat(document.getElementById('inpFat').value)   || 0,
+    fiber: parseFloat(document.getElementById('inpFiber').value) || 0,
+    meal:  selMealVal,
+  };
+  save(); closeOverlay('addOverlay'); renderProgress(); renderLog();
+  editingId = null;
+  showToast('✓ Alimento actualizado');
+}
+
 function quickAdd(idx) {
   openPortion(idx);
 }
@@ -981,9 +1038,13 @@ function delFood(id) {
 }
 
 function openAdd() {
+  editingId = null;
   selMealVal = getMealByTime();
-  document.querySelectorAll('.m-chip').forEach(c => c.classList.toggle('sel', c.dataset.m===selMealVal));
-  ['inpName','inpCal','inpProt','inpCarbs','inpFat','inpFiber','searchInp'].forEach(id => document.getElementById(id).value='');
+  document.querySelectorAll('.m-chip').forEach(c => c.classList.toggle('sel', c.dataset.m === selMealVal));
+  ['inpName','inpCal','inpProt','inpCarbs','inpFat','inpFiber','searchInp'].forEach(id => document.getElementById(id).value = '');
+  document.querySelector('#addOverlay .sheet-title').innerHTML = 'Añadir <span>alimento</span>';
+  document.getElementById('addConfirmBtn').textContent = 'Añadir ✓';
+  document.getElementById('editGramsNote').textContent = '';
   renderQuick();
   document.getElementById('addOverlay').classList.add('show');
 }
