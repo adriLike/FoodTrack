@@ -535,6 +535,7 @@ function loadDB() {
         p.goals.carbs = p.goals.carbs ?? 250;
         p.goals.fat   = p.goals.fat   ?? 65;
         p.goals.fiber = p.goals.fiber ?? 25;
+        p.favorites   = p.favorites   ?? [];
         return p;
       }
     }
@@ -556,7 +557,7 @@ function loadDB() {
     }
   } catch(e) {}
 
-  return { version:1, goals:{ cal:2000, prot:150, carbs:250, fat:65, fiber:25 }, days:{} };
+  return { version:1, goals:{ cal:2000, prot:150, carbs:250, fat:65, fiber:25 }, days:{}, favorites:[] };
 }
 
 function save() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
@@ -582,6 +583,7 @@ function importJSON(event) {
       p.goals.carbs = p.goals.carbs ?? 250;
       p.goals.fat   = p.goals.fat   ?? 65;
       p.goals.fiber = p.goals.fiber ?? 25;
+      p.favorites   = p.favorites   ?? [];
       Object.keys(db.days).forEach(k => { if (!p.days[k]) p.days[k] = db.days[k]; });
       db = p; save(); render();
       showToast('✓ Datos importados correctamente');
