@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "goals": {
+    "cal": 2000,
+    "prot": 155,
+    "carbs": 225,
+    "fat": 50,
+    "fiber": 25
+  },
+  "favorites": [],
+  "days": {
+    "2026-05-11": {
+      "foods": [
+        {
+          "id": 1747000001.1,
+          "name": "Alitas de pollo al horno · patatas · cebolla",
+          "cal": 700,
+          "prot": 45,
+          "carbs": 41,
+          "fat": 34,
+          "fiber": 5,
+          "icon": "🍗",
+          "meal": "Almuerzo",
+          "time": "14:00"
+        },
+        {
+          "id": 1747000002.2,
+          "name": "Tostada pan molde · humus · pollo",
+          "cal": 220,
+          "prot": 19,
+          "carbs": 18,
+          "fat": 5,
+          "fiber": 2,
+          "icon": "🥪",
+          "meal": "Snack",
+          "time": "18:00"
+        },
+        {
+          "id": 1747000003.3,
+          "name": "Merluza · pimientos",
+          "cal": 285,
+          "prot": 38,
+          "carbs": 9,
+          "fat": 11,
+          "fiber": 3,
+          "icon": "🐟",
+          "meal": "Cena",
+          "time": "21:00"
+        }
+      ],
+      "workouts": []
+    },
+    "2026-05-12": {
+      "foods": [
+        {
+          "id": 1747000011.1,
+          "name": "Macarrones con carne picada · ajo y cebolla",
+          "cal": 610,
+          "prot": 45,
+          "carbs": 69,
+          "fat": 16,
+          "fiber": 5,
+          "icon": "🍝",
+          "meal": "Almuerzo",
+          "time": "14:00"
+        },
+        {
+          "id": 1747000012.2,
+          "name": "Tostada pan molde · humus · pollo",
+          "cal": 220,
+          "prot": 19,
+          "carbs": 18,
+          "fat": 5,
+          "fiber": 2,
+          "icon": "🥪",
+          "meal": "Snack",
+          "time": "18:00"
+        },
+        {
+          "id": 1747000013.3,
+          "name": "2 huevos · ensalada atún · pollo · calabacín",
+          "cal": 710,
+          "prot": 83,
+          "carbs": 22,
+          "fat": 30,
+          "fiber": 3,
+          "icon": "🍳",
+          "meal": "Cena",
+          "time": "21:00"
+        }
+      ],
+      "workouts": []
+    },
+    "2026-05-13": {
+      "foods": [
+        {
+          "id": 1747000021.1,
+          "name": "Contramuslos de pollo · alcachofas",
+          "cal": 640,
+          "prot": 54,
+          "carbs": 24,
+          "fat": 36,
+          "fiber": 11,
+          "icon": "🍗",
+          "meal": "Almuerzo",
+          "time": "14:00"
+        },
+        {
+          "id": 1747000022.2,
+          "name": "Plátano (1 ud)",
+          "cal": 105,
+          "prot": 1.3,
+          "carbs": 27,
+          "fat": 0.4,
+          "fiber": 3,
+          "icon": "🍌",
+          "meal": "Snack",
+          "time": "18:00"
+        },
+        {
+          "id": 1747000023.3,
+          "name": "Dorada airfryer · pimiento verde · AOVE",
+          "cal": 285,
+          "prot": 39,
+          "carbs": 5,
+          "fat": 12,
+          "fiber": 2,
+          "icon": "🐠",
+          "meal": "Cena",
+          "time": "21:00"
+        }
+      ],
+      "workouts": []
+    },
+    "2026-05-14": {
+      "foods": [
+        {
+          "id": 1747000031.1,
+          "name": "Pollo al horno · patata y cebolla",
+          "cal": 590,
+          "prot": 67,
+          "carbs": 41,
+          "fat": 13,
+          "fiber": 5,
+          "icon": "🍗",
+          "meal": "Almuerzo",
+          "time": "14:00"
+        },
+        {
+          "id": 1747000032.2,
+          "name": "Tostada pan molde · humus · pollo",
+          "cal": 220,
+          "prot": 19,
+          "carbs": 18,
+          "fat": 5,
+          "fiber": 2,
+          "icon": "🥪",
+          "meal": "Snack",
+          "time": "18:00"
+        },
+        {
+          "id": 1747000033.3,
+          "name": "Salmón airfryer",
+          "cal": 415,
+          "prot": 40,
+          "carbs": 0,
+          "fat": 26,
+          "fiber": 0,
+          "icon": "🐟",
+          "meal": "Cena",
+          "time": "21:00"
+        }
+      ],
+      "workouts": []
+    },
+    "2026-05-15": {
+      "foods": [
+        {
+          "id": 1747000041.1,
+          "name": "Gnocchi · pollo · queso fundido · verduras",
+          "cal": 820,
+          "prot": 67,
+          "carbs": 76,
+          "fat": 26,
+          "fiber": 3,
+          "icon": "🥟",
+          "meal": "Almuerzo",
+          "time": "14:00"
+        },
+        {
+          "id": 1747000042.2,
+          "name": "Plátano (1 ud)",
+          "cal": 105,
+          "prot": 1.3,
+          "carbs": 27,
+          "fat": 0.4,
+          "fiber": 3,
+          "icon": "🍌",
+          "meal": "Snack",
+          "time": "18:00"
+        },
+        {
+          "id": 1747000043.3,
+          "name": "Atún airfryer · patatas · huevo",
+          "cal": 405,
+          "prot": 30,
+          "carbs": 35,
+          "fat": 11,
+          "fiber": 4,
+          "icon": "🐟",
+          "meal": "Cena",
+          "time": "21:00"
+        }
+      ],
+      "workouts": []
+    }
+  }
+}
